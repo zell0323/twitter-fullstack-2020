@@ -1,10 +1,11 @@
 <link rel="stylesheet" href="/user-left-style.css">
+<link rel="stylesheet" href="/user-upper-style.css">
 <div class="container p-0 my-0 mx-auto">
   <div class="row gx-0">
     <div class="left col-2 position-sticky vh-100">
       <div class="nav nav-pills flex-column vh-100" role="tablist">
         {{>logo}}
-        <a class="nav-link active" data-bs-toggle="tab" href="/home" role="tab" >{{>home}}首頁</a>
+        <a class="nav-link active" data-bs-toggle="tab" href="/home" role="tab">{{>home}}首頁</a>
         <a class="nav-link " data-bs-toggle="tab" href="/profile" role="tab">{{>user}}個人資料</a>
         <a class="nav-link" data-bs-toggle="tab" href="/setting" role="tab"> {{>setting}}設定</a>
         <button type="button" class="btn btn-primary">推文</button>
@@ -12,7 +13,38 @@
       </div>
     </div>
     <div class="col-7 overflow-auto">
-      Content for middle column
+      <div class="row">
+        <div class="card">
+          <div class="coverage-image-box">
+            <img src="https://i.imgur.com/s2FQTRY.jpg" class="card-img-top coverage-image" alt="coverage">
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="avatar-image-box col">
+                <img src="" alt="avatar">
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-primary">編輯個人資料</button>
+              </div>
+            </div>
+            <h5 class="user-name">John Doe</h5>
+            <div class="user-account">@heyjohn</div>
+            <p class="user-description">Some quick example text to build on the.
+            </p>
+            <div class="row">
+              <div class="col">
+                <a href="#" class="link-follwers">34個追隨中</a>
+              </div>
+              <div class="col">
+                <a href="#" class="link-follwings">59位追隨者</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        Content for profile lower
+      </div>
     </div>
     <div class="col-3 position-sticky">
       Content for right column

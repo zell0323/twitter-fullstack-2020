@@ -27,7 +27,7 @@ app.use(express.static('public'));
 
 app.use('/api', apis)
 app.use(pages)
-app.get('/', (req, res) => res.render('home'))
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 module.exports = app

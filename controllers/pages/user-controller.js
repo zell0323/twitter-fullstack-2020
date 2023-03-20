@@ -1,6 +1,6 @@
 const userController = {
   getUserTweets: (req, res, next) => {
-    res.json({ controller: 'getUserTweets' })
+    res.render('user-profile', { Page: 'Tweets' })
   },
   getUserFollowings: (req, res, next) => {
     res.json({ controller: 'getUserFollowings' })
