@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const helpers = require('./_helpers');
 const handlebars = require('express-handlebars')
+const { apis, pages } = require('./routes/index')
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -12,7 +13,7 @@ const port = process.env.PORT || 3000
 // use helpers.ensureAuthenticated(req) to replace req.isAuthenticated()
 app.engine('hbs', handlebars({
   extname: '.hbs',
-  partialsDir: ['views/partials','views/partials/svgs']
+  partialsDir: ['views/partials', 'views/partials/svgs']
 }));
 app.set('view engine', 'hbs')
 app.use(express.static('public'));
@@ -24,7 +25,8 @@ app.use(express.static('public'));
 
 
 
-
+app.use('/api', apis)
+app.use(pages)
 app.get('/', (req, res) => res.render('home'))
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
