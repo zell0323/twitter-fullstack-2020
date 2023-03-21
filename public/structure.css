@@ -1,0 +1,11 @@
+.left {
+  min-width: 178px;
+  height: 100vh;
+}
+
+.middle {
+  min-width: 400 px;
+  height: 100vh;
+}
+
+.right {}

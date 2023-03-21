@@ -5,14 +5,15 @@
   box-sizing: border-box;
 }
 
-body,html {
+body,
+html {
   height: 100vh;
   width: 100%;
   margin: 0;
 }
 
 svg {
-margin: auto 16px auto 16px;
+  margin: auto 16px auto 16px;
 }
 
 svg.logo {
@@ -36,9 +37,10 @@ svg.logo {
 .nav-pills .nav-link.active {
   background-color: white;
   color: #FF6600;
-  
+
 }
-.nav-pills .nav-link.active path{
+
+.nav-pills .nav-link.active path {
   fill: #FF6600;
 }
 

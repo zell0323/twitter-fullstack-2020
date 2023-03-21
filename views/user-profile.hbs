@@ -1,1 +1,14 @@
-{{>user-left}}
+<link rel="stylesheet" href="/structure.css">
+<div class="left col-3 position-sticky">
+  {{>user-left}}
+</div>
+<div class="middle col-7 border">
+  {{>header}}
+  {{>user-upper}}
+  <div class="row">
+    {{>user-lower}}
+  </div>
+</div>
+<div class="right col position-sticky">
+  {{>user-right}}
+</div>
