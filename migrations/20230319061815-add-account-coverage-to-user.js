@@ -9,7 +9,7 @@ module.exports = {
       }),
       queryInterface.addColumn('Users', 'coverage', {
         type: Sequelize.STRING,
-        defaultValue: 'https://reurl.cc/EG6o5g'
+        defaultValue: 'https://i.imgur.com/s2FQTRY.jpg'
       })
     ]);
   },
