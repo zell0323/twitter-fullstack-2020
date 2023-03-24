@@ -1,0 +1,85 @@
+<div class="cus-modal-container">
+  <div class="row cus-modal border border-dark">
+    <form class="row form-row" action="" method="POST" enctype="multipart/form-data">
+      <div class="modal-header d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+          <div class="modal-close po-cur">
+            <div class="svg-round svg-round-effect">
+              {{>close}}
+            </div>
+          </div>
+          <div class="ms-3">編輯個人資料</div>
+        </div>
+        <button type="submit" class="btn btn-1">
+          儲存
+        </button>
+      </div>
+      <div class="coverage-image">
+        <div class="filter">
+          <div class="d-flex justify-content-center align-items-center">
+            <label class="icon-box mx-2">
+              <div class="svg-a">
+                <div class="svg-round po-cur">
+                  {{>addPhoto}}
+                </div>
+              </div>
+              <input id="upload_coverage_img" style="display:none;" id="coverage" name="coverage" type="file">
+            </label>
+            <label class="icon-box mx-2">
+              <div class="svg-a">
+                <div class="svg-round po-cur">
+                  {{>close}}
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between px-3">
+        <div class="avatar-size">
+          <div class="avatar-image-clip">
+            <div class="avatar-border">
+              <div class="avatar-a">
+                <div class="avatar-image">
+                  <div class="filter">
+                    <div class="d-flex justify-content-center align-items-center">
+                      <label class="icon-box mx-2">
+                        <div class="svg-a">
+                          <div class="svg-round po-cur">
+                            {{>addPhoto}}
+                          </div>
+                        </div>
+                        <input id="upload_avatar_img" style="display:none;" name="avatar" type="file">
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="input-structure px-3 my-2">
+        <div class="form-floating">
+          <input type="name" class="form-control" id="name" placeholder="{{user.name}}" name="name"
+            style="height: 54px">
+          <label for="floatingInput">名稱</label>
+        </div>
+        <div class="text-right">
+          <span class="">8</span>/50
+        </div>
+      </div>
+      <div class="input-structure px-3 mb-3">
+        <div class="form-floating">
+          <textarea class="form-control" placeholder="{{user.discription}}" id="discription" style="height: 147px"
+            name="discription"></textarea>
+          <label for="floatingTextarea2">自我介紹</label>
+        </div>
+        <div class="text-right">
+          <span class="">0</span>/160
+        </div>
+      </div>
+    </form>
+    {{>cropper}}
+  </div>
+</div>
