@@ -1,9 +1,9 @@
-<div class="cus-modal-container">
+<div class="edit-container cus-modal-container">
   <div class="row cus-modal border border-dark">
     <form class="row form-row" action="" method="POST" enctype="multipart/form-data">
       <div class="modal-header d-flex justify-content-between">
         <div class="d-flex align-items-center">
-          <div class="modal-close po-cur">
+          <div class="edit-modal-close po-cur">
             <div class="svg-round svg-round-effect">
               {{>close}}
             </div>
@@ -23,7 +23,8 @@
                   {{>addPhoto}}
                 </div>
               </div>
-              <input id="upload_coverage_img" style="display:none;" id="coverage" name="coverage" type="file">
+              <input id="upload_coverage_img" style="display:none;" id="coverage" name="coverage" type="file"
+                accept="image/*">
             </label>
             <label class="icon-box mx-2">
               <div class="svg-a">
@@ -49,7 +50,7 @@
                             {{>addPhoto}}
                           </div>
                         </div>
-                        <input id="upload_avatar_img" style="display:none;" name="avatar" type="file">
+                        <input id="upload_avatar_img" style="display:none;" name="avatar" type="file" accept="image/*">
                       </label>
                     </div>
                   </div>
@@ -80,6 +81,5 @@
         </div>
       </div>
     </form>
-    {{>cropper}}
   </div>
 </div>

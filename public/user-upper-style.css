@@ -260,8 +260,6 @@ input[type="text"],
   position: fixed;
   top: 0px;
   left: 0px;
-  /* display: flex; */
-  /* flex: 0 0 auto; */
   width: 100vw;
   height: 100%;
   justify-content: center;
@@ -277,12 +275,21 @@ input[type="text"],
   border-radius: 10px;
 }
 
-.box {
-  margin: 14px 4px;
-  border: solid 1px #ddd;
+.avatar-cropper-container {
+  background-color: initial;
 }
 
-.tailoring-box {
-  width: 400px;
-  height: 300px;
+.avatar-cropper {
+  display: inline-block;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.avatar-cropper-container .tailoring-box {
+  max-width: 640px;
+  height: 640px;
+}
+
+.avatar-cropper-container img {
+  display: block;
 }
