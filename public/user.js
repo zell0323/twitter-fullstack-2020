@@ -12,6 +12,7 @@ const avatarModalClose = document.querySelector('.avatar-modal-close')
 const coverageModalClose = document.querySelector('.coverage-modal-close')
 const upload_avatar_img = document.querySelector('#upload_avatar_img')
 const upload_coverage_img = document.querySelector('#upload_coverage_img')
+const modalCoverageDelete = document.querySelector('.modal-coverage-delete')
 const cropped_avatar_img = document.querySelector('#croppedAvatar')
 const cropped_coverage_img = document.querySelector('#croppedCoverage')
 const avatarCropperSubmit = document.querySelector('.avatar-cropper-submit')
@@ -51,8 +52,6 @@ editUserBtn.addEventListener('click', function getUserDataRenderPage() {
 editModalClose.addEventListener('click', function closeUserData() {
   fadeOut(editModalContainer)
   unblockScroll()
-  avatarImagePreview.style.backgroundImage = ""
-  coverageImagePreview.style.backgroundImage = ""
 })
 
 // Cropper.js >> For圖片裁切
@@ -200,6 +199,12 @@ coverageCropperSubmit.addEventListener('click', function submitCoverageCropper()
   fadeOut(coverageModalContainer)
 })
 
+// 移除上傳的coverage
+modalCoverageDelete.addEventListener('click', function removeUploadCoverage() {
+  coverageImagePreview.style.backgroundImage = ""
+  cropped_coverage_img.value = "" //清除為空；送出資料時若為空，則保留原圖
+})
+
 // fadeIn,...
 function fadeIn(element, display, duration = 300) {
   element.style.opacity = element.style.opacity || 0
@@ -226,6 +231,10 @@ function fadeOut(element, duration = 400) {
       opacity = 0
       element.style.display = "none"
       element.style.visibility = "hidden"
+      if (element === editModalContainer) { //若關閉的是主要編輯畫面
+        avatarImagePreview.style.backgroundImage = ""
+        coverageImagePreview.style.backgroundImage = ""
+      }
     }
     element.style.opacity = opacity
   }, 20)
