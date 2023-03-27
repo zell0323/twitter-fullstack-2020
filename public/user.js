@@ -1,6 +1,10 @@
 const editUserBtn = document.querySelector('.edit-user-btn')
 const editModalContainer = document.querySelector('.edit-container')
 const editModalClose = document.querySelector('.edit-modal-close')
+const coverageImage = document.querySelector('.edit-coverage-image')
+const avatarImage = document.querySelector('.edit-avatar-image')
+const userName = document.querySelector('.edit-user-name')
+const userIntroduction = document.querySelector('.edit-user-introduction')
 // cropper
 const avatarModalContainer = document.querySelector('.avatar-cropper-container')
 const coverageModalContainer = document.querySelector('.coverage-cropper-container')
@@ -20,21 +24,27 @@ const coverageImagePreview = document.querySelector('.coverage-image-preview')
 
 // 點擊"編輯個人資料""
 editUserBtn.addEventListener('click', function getUserDataRenderPage() {
-  // axios.get('/api/users/1')
-  //   .then(function (response) {
-  //     // 1.handle success
-  //     console.log(response)
-  //   })
-  //   .catch(function (error) {
-  //     // 2.handle error
-  //     console.log(error)
-  //   })
-  //   .then(function () {
-  //     // 3.always executed
-  //   })
-  console.log('click')
-  fadeIn(editModalContainer, 'flex')
-  blockScroll()
+  axios.get('/api/users/85') //will change to users/id(id will select by DOM)
+    .then(function (response) {
+      // 1.handle success
+      if (response.data.data.user) {
+        console.log(response.data.data.user) // 傳入的資料，取到user
+        coverageImage.style.backgroundImage = `url('${response.data.data.user.coverage}')` || 'none'
+        avatarImage.style.backgroundImage = `url('${response.data.data.user.avatar}')` || 'none'
+        userName.value = `${response.data.data.user.name}`
+        userIntroduction.value = response.data.data.user.introduction !== null ? `${response.data.data.user.introduction}` : ""
+      } else { throw new Error('Data Type Incorrect') }
+    })
+    .catch(function (error) {
+      // 2.handle error
+      console.log(error)
+    })
+    .then(function () {
+      // 3.always executed
+      console.log('click')
+      fadeIn(editModalContainer, 'flex')
+      blockScroll()
+    })
 })
 
 // 關閉"編輯個人資料""
