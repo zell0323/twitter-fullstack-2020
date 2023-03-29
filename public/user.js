@@ -1,4 +1,5 @@
 const editUserBtn = document.querySelector('.edit-user-btn')
+const formSubmit = document.querySelector('.form-submit')
 const editModalContainer = document.querySelector('.edit-container')
 const editModalClose = document.querySelector('.edit-modal-close')
 const coverageImage = document.querySelector('.edit-coverage-image')
@@ -22,6 +23,8 @@ const coverageimageCropField = document.querySelector('#coverageTailoringImg')
 const avatarImagePreview = document.querySelector('.avatar-image-preview')
 const coverageImagePreview = document.querySelector('.coverage-image-preview')
 
+// 創建formData, 為了之後POST時的資料
+const formData = new FormData()
 
 // 點擊"編輯個人資料""
 editUserBtn.addEventListener('click', function getUserDataRenderPage() {
@@ -34,6 +37,7 @@ editUserBtn.addEventListener('click', function getUserDataRenderPage() {
         avatarImage.style.backgroundImage = `url('${response.data.data.user.avatar}')` || 'none'
         userName.value = `${response.data.data.user.name}`
         userIntroduction.value = response.data.data.user.introduction !== null ? `${response.data.data.user.introduction}` : ""
+        document.querySelector('.post-user-edit').action = `/api/users/${response.data.data.user.id}`
       } else { throw new Error('Data Type Incorrect') }
     })
     .catch(function (error) {
@@ -42,7 +46,6 @@ editUserBtn.addEventListener('click', function getUserDataRenderPage() {
     })
     .then(function () {
       // 3.always executed
-      console.log('click')
       fadeIn(editModalContainer, 'flex')
       blockScroll()
     })
@@ -52,6 +55,36 @@ editUserBtn.addEventListener('click', function getUserDataRenderPage() {
 editModalClose.addEventListener('click', function closeUserData() {
   fadeOut(editModalContainer)
   unblockScroll()
+})
+
+// 點擊儲存
+formSubmit.addEventListener('click', function sendEditData(event) {
+  event.preventDefault() // 防止預設的送出
+  formData.append('name', document.querySelector("input[name='name']").value)
+  formData.append('introduction', document.querySelector("textarea[name='introduction']").value)
+  // show form Data
+  // for (var pair of formData.entries()) {
+  //   console.log(pair[0] + ', ' + pair[1]);
+  // }
+  axios.post('/api/users/85', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }) //will change to users/id(id will select by DOM)
+    .then(function (response) {
+      // 1.handle success
+      console.log(response)
+    })
+    .catch(function (error) {
+      // 2.handle error
+      console.log(error)
+    })
+    .then(function () {
+      // 3.always executed
+      console.log('click')
+      // fadeIn(editModalContainer, 'flex')
+      // blockScroll()
+    })
 })
 
 // Cropper.js >> For圖片裁切
@@ -72,6 +105,7 @@ const avatarCrop = new Cropper(avatarimageCropField, {
 
 // 監聽avatar圖片上傳事件
 upload_avatar_img.addEventListener('change', function avatarImageToCropper() {
+  formData.delete('croppedAvatar') //每次開啟時刪除原有的form Data值
   let file = this.files[0]
   if (file) {
     let reader = new FileReader()
@@ -99,7 +133,12 @@ avatarModalClose.addEventListener('click', function closeAvatarCropper() {
 avatarCropperSubmit.addEventListener('click', function submitAvatarCropper() {
   const cvs = avatarCrop.getCroppedCanvas()
   const context = cvs.getContext('2d')
-  let base64 = cvs.toDataURL('image/jpeg')
+  let base64 = cvs.toDataURL('image/jpeg') //轉為jpeg base64
+  formData.append('croppedAvatar', base64)
+  // cvs.toBlob((blob) => {
+  //   formData.append('croppedAvatar', blob)
+  //   console.log(blob)
+  // })
   let img = new Image()
   img.src = base64
   img.onload = function () {
@@ -144,6 +183,7 @@ const coverageCrop = new Cropper(coverageimageCropField, {
 
 // 監聽coverage圖片上傳事件
 upload_coverage_img.addEventListener('change', function coverageImageToCropper() {
+  formData.delete('croppedCoverage') //每次開啟時刪除原有的form Data值
   let file = this.files[0]
   if (file) {
     let reader = new FileReader()
@@ -172,6 +212,10 @@ coverageCropperSubmit.addEventListener('click', function submitCoverageCropper()
   const cvs = coverageCrop.getCroppedCanvas()
   const context = cvs.getContext('2d')
   let base64 = cvs.toDataURL('image/jpeg')
+  formData.append('croppedCoverage', base64)
+  // cvs.toBlob((blob) => {
+  //   formData.append('croppedCoverage', blob)
+  // })
   let img = new Image()
   img.src = base64
   img.onload = function () {

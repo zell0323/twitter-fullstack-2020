@@ -26,7 +26,7 @@ app.set('view engine', 'hbs')
 app.use(express.static('public'));
 
 app.use(express.urlencoded({ extended: true }))
-
+app.use(express.json())
 app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false }))
 app.use(passport.initialize()) // 初始化 Passport
 app.use(passport.session()) // 啟動 session 功能
