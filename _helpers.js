@@ -1,12 +1,13 @@
-function ensureAuthenticated(req) {
-  return req.isAuthenticated();
+const getUser = req => {
+  return req.user || null
 }
 
-function getUser(req) {
-  return req.user;
+const ensureAuthenticated = req => {
+  return req.isAuthenticated()
 }
-
 module.exports = {
-  ensureAuthenticated,
   getUser,
-};
+  ensureAuthenticated
+}
+
+//這個檔案有重寫過，因為認證問題。並被routes/index以及routes/modules/admin引用
