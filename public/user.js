@@ -81,9 +81,8 @@ formSubmit.addEventListener('click', function sendEditData(event) {
     })
     .then(function () {
       // 3.always executed
-      console.log('click')
-      // fadeIn(editModalContainer, 'flex')
-      // blockScroll()
+      fadeOut(editModalContainer)
+      unblockScroll()
     })
 })
 
@@ -134,7 +133,7 @@ avatarCropperSubmit.addEventListener('click', function submitAvatarCropper() {
   const cvs = avatarCrop.getCroppedCanvas()
   const context = cvs.getContext('2d')
   let base64 = cvs.toDataURL('image/jpeg') //轉為jpeg base64
-  formData.append('croppedAvatar', base64)
+  // https://stackoverflow.com/questions/20512887/imgur-image-uploading-will-not-work-with-base64-data 在上傳前記得把前綴 replace
   // cvs.toBlob((blob) => {
   //   formData.append('croppedAvatar', blob)
   //   console.log(blob)
@@ -162,6 +161,7 @@ avatarCropperSubmit.addEventListener('click', function submitAvatarCropper() {
     avatarImagePreview.style.backgroundImage = `url('${newImg}')`
     // 將dataURL傳入input name="croppedAvatar"
     cropped_avatar_img.value = newImg
+    formData.append('croppedAvatar', newImg.replace("data:image/jpeg;base64,", ""))
   }
   fadeOut(avatarModalContainer)
 })
@@ -212,16 +212,15 @@ coverageCropperSubmit.addEventListener('click', function submitCoverageCropper()
   const cvs = coverageCrop.getCroppedCanvas()
   const context = cvs.getContext('2d')
   let base64 = cvs.toDataURL('image/jpeg')
-  formData.append('croppedCoverage', base64)
   // cvs.toBlob((blob) => {
   //   formData.append('croppedCoverage', blob)
   // })
   let img = new Image()
   img.src = base64
   img.onload = function () {
-    const imgNewSize = 300
-    const imgNewWidth = 1278
-    const imgNewHeight = 400
+    const imgNewSize = 150
+    const imgNewWidth = 852
+    const imgNewHeight = 267
     let newImg
     // 使用 canvas 調整圖片寬高
     cvs.width = imgNewWidth
@@ -239,6 +238,7 @@ coverageCropperSubmit.addEventListener('click', function submitCoverageCropper()
     coverageImagePreview.style.backgroundImage = `url('${newImg}')`
     // 將dataURL傳入input name="croppedAvatar"
     cropped_coverage_img.value = newImg
+    formData.append('croppedCoverage', newImg.replace("data:image/jpeg;base64,", ""))
   }
   fadeOut(coverageModalContainer)
 })

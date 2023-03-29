@@ -27,23 +27,39 @@ const userController = {
   },
   editUser: async (req, res, next) => {
     try {
-      if (req.body.croppedAvatar) {
-        // https://stackoverflow.com/questions/20512887/imgur-image-uploading-will-not-work-with-base64-data 在上傳前記得把前綴 replace
-        const avatarData = req.body.croppedAvatar.replace("data:image/jpeg;base64,", "")
-        const avatarFilePath = await imgurFileHandler(avatarData)
-        console.log(avatarFilePath)
-      }
-      if (req.body.croppedCoverage) {
-        const coverageData = req.body.croppedCoverage.replace("data:image/jpeg;base64,", "")
-        const coverageFilePath = await imgurFileHandler(coverageData)
-        console.log(coverageFilePath)
-      }
-
+      const { name, introduction, croppedAvatar, croppedCoverage } = req.body
+      if (!name) throw new Error('Name is required!')
+      // console.log(name, introduction)
+      // Upload image to imgur
+      const [user, avatarFilePath, coverageFilePath] = await Promise.all([
+        User.findByPk(req.params.id),
+        imgurFileHandler(croppedAvatar),
+        imgurFileHandler(croppedCoverage)]
+      )
+      console.log(avatarFilePath)
+      console.log(coverageFilePath)
+      if (!user) throw new Error('Can not find user!')
+      const updatedUser = await user.update({
+        name,
+        introduction,
+        avatar: avatarFilePath || user.avatar,
+        coverage: coverageFilePath || user.coverage
+      })
+      return res.json({
+        status: 'success',
+        data: {
+          user: {
+            id: updatedUser.id,
+            name: updatedUser.name,
+            avatar: updatedUser.avatar,
+            coverage: updatedUser.coverage,
+            introduction: updatedUser.introduction
+          }
+        }
+      })
     } catch (err) {
       next(err)
     }
-
-    // res.json({ controller: 'editUser' })
   }
 }
 
