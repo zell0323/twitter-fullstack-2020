@@ -70,23 +70,25 @@
         </div>
       </div>
       <div class="input-structure px-3 my-2">
-        <div class="form-floating">
+        <div class="form-floating name-word-form">
           <input type="name" class="form-control edit-user-name" id="name" placeholder="" name="name"
             style="height: 54px">
           <label for="floatingInput">名稱</label>
         </div>
-        <div class="text-right">
-          <span class="">8</span>/50
+        <div class="d-flex justify-content-between">
+          <div><span class="name-word-warning warning"></span></div>
+          <div><span class="name-word">0</span>/50</div>
         </div>
       </div>
       <div class="input-structure px-3 mb-3">
-        <div class="form-floating">
+        <div class="form-floating introduction-word-form">
           <textarea class="form-control edit-user-introduction" placeholder="" id="introduction" style="height: 147px"
             name="introduction"></textarea>
           <label for="floatingTextarea2">自我介紹</label>
         </div>
-        <div class="text-right">
-          <span class="">0</span>/160
+        <div class="d-flex justify-content-between">
+          <div><span class="introduction-word-warning warning"></span></div>
+          <div><span class="introduction-word">0</span>/160</div>
         </div>
       </div>
     </form>
