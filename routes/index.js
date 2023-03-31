@@ -2,12 +2,15 @@ const express = require('express')
 const router = express.Router()
 const mainPageController = require('../controllers/mainPage-controller') 
 const userController = require('../controllers/user-controller')
+const adminController = require('../controllers/admin-controller')
 const { authenticated } = require('../middleware/auth') 
 const { generalErrorHandler } = require('../middleware/error-handler')
 const passport = require('../config/passport')
 
 //admin routes 
 const admin = require('./modules/admin')
+router.get('/admin', adminController.loginPage)
+router.post('/admin', passport.authenticate('local', { failureRedirect: '/admin', failureFlash: true }), adminController.logIn) // 注意是 post
 router.use('/admin', admin)
 
 //normal users
