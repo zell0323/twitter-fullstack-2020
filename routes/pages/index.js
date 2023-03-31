@@ -27,6 +27,10 @@ router.get('/login', userController.logInPage)
 router.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }), userController.logIn) // 注意是 post
 router.get('/logout', userController.logout)
 
+// setting
+router.get('/setting', userController.settingPage)
+router.post('/setting', userController.setting)
+
 //main page
 router.get('/main', mainPageController.getMainPage)
 

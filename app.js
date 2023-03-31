@@ -7,7 +7,8 @@ const handlebars = require('express-handlebars')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('./config/passport')
-const helpers = require('./_helpers');
+const helpers = require('./_helpers')
+const { getUser } = require('./helpers/auth-helpers')
 const { apis, pages } = require('./routes/index')
 const app = express()
 
@@ -34,6 +35,7 @@ app.use(flash()) // 掛載套件
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')  // 設定 success_msg 訊息
   res.locals.error_messages = req.flash('error_messages')  // 設定 warning_msg 訊息
+  res.locals.user = getUser(req)
   next()
 })
 

@@ -53,6 +53,11 @@ editUserBtn.addEventListener('click', function getUserDataRenderPage() {
 
 // 關閉"編輯個人資料""
 editModalClose.addEventListener('click', function closeUserData() {
+  // 當關閉modal時刪除所有form data
+  formData.delete('croppedAvatar')
+  formData.delete('croppedCoverage')
+  formData.delete('name')
+  formData.delete('introduction')
   fadeOut(editModalContainer)
   unblockScroll()
 })
@@ -81,6 +86,10 @@ formSubmit.addEventListener('click', function sendEditData(event) {
     })
     .then(function () {
       // 3.always executed
+      formData.delete('croppedAvatar')
+      formData.delete('croppedCoverage')
+      formData.delete('name')
+      formData.delete('introduction')
       fadeOut(editModalContainer)
       unblockScroll()
     })
