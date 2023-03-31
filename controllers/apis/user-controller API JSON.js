@@ -1,21 +1,25 @@
 const db = require('../../models')
 const { User } = db
 const { imgurFileHandler } = require('../../helpers/file-helpers')
+
 const userController = {
   editUserPage: async (req, res, next) => {
     try {
       // 根據傳入的id找到對應的使用者
       const user = await User.findOne({ where: { id: req.params.id } })
-      console.log(user)
       if (!user) throw new Error('No such User!')
       // 回傳資料
       return res.json({
         status: 'success',
-        id: user.id,
-        name: user.name,
-        avatar: user.avatar,
-        coverage: user.coverage,
-        introduction: user.introduction
+        data: {
+          user: {
+            id: user.id,
+            name: user.name,
+            avatar: user.avatar,
+            coverage: user.coverage,
+            introduction: user.introduction
+          }
+        }
       })
     } catch (err) {
       next(err)
@@ -43,11 +47,15 @@ const userController = {
       })
       return res.json({
         status: 'success',
-        id: updatedUser.id,
-        name: updatedUser.name,
-        avatar: updatedUser.avatar,
-        coverage: updatedUser.coverage,
-        introduction: updatedUser.introduction
+        data: {
+          user: {
+            id: updatedUser.id,
+            name: updatedUser.name,
+            avatar: updatedUser.avatar,
+            coverage: updatedUser.coverage,
+            introduction: updatedUser.introduction
+          }
+        }
       })
     } catch (err) {
       next(err)

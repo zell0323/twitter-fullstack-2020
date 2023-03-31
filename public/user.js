@@ -36,6 +36,10 @@ userName.addEventListener('input', (event) => {
     nameWordWarning.innerHTML = "字數超出上限"
     userName.classList.add('is-invalid')
   }
+  else {
+    nameWordWarning.innerHTML = ""
+    userName.classList.remove('is-invalid')
+  }
   nameWord.innerHTML = count
 })
 userIntroduction.addEventListener('input', (event) => {
@@ -44,23 +48,27 @@ userIntroduction.addEventListener('input', (event) => {
     introductionWordWarning.innerHTML = "字數超出上限"
     userIntroduction.classList.add('is-invalid')
   }
+  else {
+    introductionWordWarning.innerHTML = ""
+    userName.classList.remove('is-invalid')
+  }
   introductionWord.innerHTML = count
 })
 
 // 點擊"編輯個人資料""
 editUserBtn.addEventListener('click', function getUserDataRenderPage() {
-  axios.get('/api/users/85') //will change to users/id(id will select by DOM)
+  axios.get('/api/users/3') //will change to users/id(id will select by DOM)
     .then(function (response) {
       // 1.handle success
-      if (response.data.data.user) {
-        console.log(response.data.data.user) // 傳入的資料，取到user
-        coverageImage.style.backgroundImage = `url('${response.data.data.user.coverage}')` || 'none'
-        avatarImage.style.backgroundImage = `url('${response.data.data.user.avatar}')` || 'none'
-        userName.value = `${response.data.data.user.name}`
-        userIntroduction.value = response.data.data.user.introduction !== null ? `${response.data.data.user.introduction}` : ""
-        document.querySelector('.post-user-edit').action = `/api/users/${response.data.data.user.id}`
-        nameWord.innerHTML = response.data.data.user.name !== null ? response.data.data.user.name.trim().length : 0
-        introductionWord.innerHTML = response.data.data.user.introduction !== null ? response.data.data.user.introduction.trim().length : 0
+      console.log(response.data)
+      if (response.data) {
+        coverageImage.style.backgroundImage = `url('${response.data.coverage}')` || 'none'
+        avatarImage.style.backgroundImage = `url('${response.data.avatar}')` || 'none'
+        userName.value = `${response.data.name}`
+        userIntroduction.value = response.data.introduction !== null ? `${response.data.introduction}` : ""
+        document.querySelector('.post-user-edit').action = `/api/users/${response.data.id}`
+        nameWord.innerHTML = response.data.name !== null ? response.data.name.trim().length : 0
+        introductionWord.innerHTML = response.data.introduction !== null ? response.data.introduction.trim().length : 0
       } else { throw new Error('Data Type Incorrect') }
     })
     .catch(function (error) {
@@ -81,6 +89,10 @@ editModalClose.addEventListener('click', function closeUserData() {
   formData.delete('croppedCoverage')
   formData.delete('name')
   formData.delete('introduction')
+  userName.classList.remove('is-invalid')
+  userIntroduction.classList.remove('is-invalid')
+  nameWordWarning.innerHTML = ""
+  introductionWordWarning.innerHTML = ""
   fadeOut(editModalContainer)
   unblockScroll()
 })
@@ -99,7 +111,7 @@ formSubmit.addEventListener('click', function sendEditData(event) {
     // for (var pair of formData.entries()) {
     //   console.log(pair[0] + ', ' + pair[1]);
     // }
-    axios.post('/api/users/85', formData, {
+    axios.post('/api/users/3', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
