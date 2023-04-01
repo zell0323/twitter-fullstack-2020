@@ -1,0 +1,9 @@
+.sidenav {
+    position: absolute;
+    color:blue;
+}
+
+.sidenav .logout {
+    bottom: 8px;
+    left:50%
+}

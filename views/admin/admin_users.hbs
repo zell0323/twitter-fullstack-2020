@@ -1,10 +1,52 @@
 <!-- Content here -->
-  <div class="row">
-    <div class="col-2">
-      Users
-    </div>
-    <div class="col-10">
-      <h2 class=" border">推文清單</h2>
-        <p class="border">123456</p>
+
+<div class="row">
+  <div class="col-2 navbar">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="/admin/admin_main">
+          <i class="fa-solid fa-house-chimney-window"></i>
+          <strong>推文清單</strong>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/admin_users">
+          <i class="fa-regular fa-user"></i>
+          <strong>使用者列表</strong>
+        </a>
+      </li>
+    </ul>
+
+    <div class="text-center">
+      <a href="/logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> <strong>登出</strong>
+      </a>
     </div>
   </div>
+  <div class="col-10">
+    <div class="row border">
+      <div class="border">
+        <h1><strong>使用者清單</strong></h1>
+      </div>
+      {{#each users}}
+      <div class="col-sm-3">
+        <div class="card my-2">
+          <img class="img-responsive card-img-top" src="{{this.coverage}}" onload="this.style.opacity=1;">
+          <img class="img-responsive center-block" src="{{this.avatar}}"
+            style="width: 100px; margin: 5px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+
+          <div class="card-body">
+            <div class="text-center"><strong>{{this.name}}</strong></div>
+            <div class="text-muted text-center"><small>@{{this.account}}</small></div>
+            <div class="text-center">
+              <i class="fa-solid fa-feather text-muted"></i>&ensp;
+              <i class="fa-regular fa-heart text-muted"></i>
+            </div>
+            <div class="text-center"><small>{{this.followingCount}}個跟隨中&ensp;{{this.followerCount}}個跟隨者</small></div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</div>

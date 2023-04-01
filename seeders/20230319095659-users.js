@@ -1,6 +1,6 @@
 'use strict'
 const bcrypt = require('bcryptjs')
-
+const faker = require('faker')
 module.exports = {
   up: async (queryInterface) => {
     // Create Regular users' array 
@@ -10,6 +10,9 @@ module.exports = {
       account: `user${i + 1}`,
       name: `user${i + 1}`,
       role: 'regular',
+      introduction:faker.lorem.text(),
+      avatar:`https://loremflickr.com/320/240/face/?random=${Math.random() * 100}`,
+      coverage: `https://loremflickr.com/320/240/restaurant,landscape/?random=${Math.random() * 100}`,
       createdAt: new Date(),
       updatedAt: new Date()
     })))
