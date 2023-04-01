@@ -2,26 +2,22 @@
 <div class="row">
   <!--side nav-->
   <div class="col-2">
-    <div class="sidenav">
-      <img src="">
-      <div>
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#" style="color:rgba(255, 102, 0, 1);">
-              <i class="fa-solid fa-house-chimney-window"></i>
-              <strong>推文清單</strong>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin/admin_users" style="color:black;">
-              <i class="fa-regular fa-user"></i>
-              <strong>使用者列表</strong>
-            </a>
-          </li>
-        </ul>
-      </div>
+    <div class="sticky-top">
+      <img class="logo" src="/pictures/logo.png"
+          style="width: 50px; margin: 10px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+      <a class="nav-link" aria-current="page" href="/admin/admin_main" style="color:rgba(255, 102, 0, 1);">
+        <i class="fa-solid fa-house-chimney-window"></i>
+        <strong>推文清單</strong>
+      </a>
+      <br>
+      <a class="nav-link" href="/admin/admin_users" style="color:black;">
+        <i class="fa-regular fa-user"></i>
+        <strong>使用者列表</strong>
+      </a>
+
     </div>
-    <div class="logout ">
+
+    <div class="fixed-bottom m-5">
       <a href="/logout" style="color:black;">
         <i class="fa-solid fa-arrow-right-from-bracket"></i> <strong>登出</strong>
       </a>
@@ -36,8 +32,8 @@
     {{#each tweets}}
     <div class="row border">
       <!--頭像-->
-      <div class="col-2">
-        <img class="img-responsive center-block" src="{{this.User.avatar}}"
+      <div class="col-2 text-center">
+        <img class="avatar-main" src="{{this.User.avatar}}"
           style="width: 100px; margin: 5px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
       </div>
       <!--內容-->

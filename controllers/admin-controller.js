@@ -1,4 +1,4 @@
-const { Tweet, User ,Like} = require('../models')
+const { Tweet, User ,Followship, Reply, Like} = require('../models')
 const Handlebars=require('handlebars')
 Handlebars.registerHelper('relativeTime', function (value) {
   const date = new Date();
@@ -46,21 +46,22 @@ const adminController = {
         include: [User]
       })
       .then(tweets => {
-        console.log(tweets[0])
+        //console.log(tweets[0])
         res.render('admin/admin_main', { tweets })
       })
       .catch(err => next(err))
 
     },
     getUsers:(req,res, next)=>{
-      
-      User.findAll({
-        raw: true,
-        nest: true,
-        include:[ Like]
+     User.findAll({
+        
+        raw:true
       })
       .then(users => {
-        console.log(users)
+        //users=JSON.stringify(users)
+        //const tweet=Tweet.findAll({raw:true})
+        console.log({users})
+        //console.log({tweet}.tweet)
         res.render('admin/admin_users', { users })
       })
       .catch(err => next(err))

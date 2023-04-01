@@ -1,9 +1,15 @@
-.sidenav {
-    position: absolute;
-    color:blue;
+ .logo{
+    border-radius: 50%;
+  }
+.avatar{
+    border-radius: 50%;
+    border: 5px solid white;
+    position:absolute;
+    top: 64px;
+    left: 55px;
 }
-
-.sidenav .logout {
-    bottom: 8px;
-    left:50%
+.avatar-main{
+    border-radius: 50%;
+    position: relative;
+    top: 7px;
 }

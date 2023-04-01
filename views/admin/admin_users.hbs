@@ -1,28 +1,29 @@
 <!-- Content here -->
 
 <div class="row">
-  <div class="col-2 navbar">
-    <ul class="nav flex-column">
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/admin/admin_main">
-          <i class="fa-solid fa-house-chimney-window"></i>
-          <strong>推文清單</strong>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/admin_users">
-          <i class="fa-regular fa-user"></i>
-          <strong>使用者列表</strong>
-        </a>
-      </li>
-    </ul>
+  <div class="col-2">
+    <div class="sticky-top">
+      <img class="logo" src="/pictures/logo.png" style="width: 50px; margin: 10px; transition: opacity 0.5s; opacity:0;"
+        onload="this.style.opacity=1;">
+      <a class="nav-link" aria-current="page" href="/admin/admin_main" style="color:black;">
+        <i class="fa-solid fa-house-chimney-window"></i>
+        <strong>推文清單</strong>
+      </a>
+      <br>
+      <a class="nav-link" href="/admin/admin_users" style="color:rgba(255, 102, 0, 1);">
+        <i class="fa-regular fa-user"></i>
+        <strong>使用者列表</strong>
+      </a>
 
-    <div class="text-center">
-      <a href="/logout">
+    </div>
+
+    <div class="fixed-bottom m-5">
+      <a href="/logout" style="color:black;">
         <i class="fa-solid fa-arrow-right-from-bracket"></i> <strong>登出</strong>
       </a>
     </div>
   </div>
+  <!--content-->
   <div class="col-10">
     <div class="row border">
       <div class="border">
@@ -31,18 +32,20 @@
       {{#each users}}
       <div class="col-sm-3">
         <div class="card my-2">
-          <img class="img-responsive card-img-top" src="{{this.coverage}}" onload="this.style.opacity=1;">
-          <img class="img-responsive center-block" src="{{this.avatar}}"
-            style="width: 100px; margin: 5px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
-
+          <img class="img-responsive card-img-top"
+          style="height: 140px" src="{{this.coverage}}" onload="this.style.opacity=1;">
+          <div class="">
+            <img class="avatar" src="{{this.avatar}}"
+              style="width: 100px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+          </div>
           <div class="card-body">
-            <div class="text-center"><strong>{{this.name}}</strong></div>
+            <div class="text-center mt-2"><strong>{{this.name}}</strong></div>
             <div class="text-muted text-center"><small>@{{this.account}}</small></div>
-            <div class="text-center">
+            <div class="text-center m-2">
               <i class="fa-solid fa-feather text-muted"></i>&ensp;
               <i class="fa-regular fa-heart text-muted"></i>
             </div>
-            <div class="text-center"><small>{{this.followingCount}}個跟隨中&ensp;{{this.followerCount}}個跟隨者</small></div>
+            <div class="text-center m-2"><small>{{this.followingCount}}個跟隨中&ensp;{{this.followerCount}}個跟隨者</small></div>
           </div>
         </div>
       </div>

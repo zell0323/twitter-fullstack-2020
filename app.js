@@ -28,6 +28,7 @@ app.use(passport.initialize()) // 初始化 Passport
 app.use(passport.session()) // 啟動 session 功能
 app.use(flash()) // 掛載套件
 app.use(methodOverride('_method'))
+app.use(express.static('public'))
 
 app.use((req, res, next) => {
   res.locals.success_messages = req.flash('success_messages')  // 設定 success_msg 訊息
