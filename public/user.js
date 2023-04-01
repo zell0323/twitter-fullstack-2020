@@ -60,7 +60,6 @@ editUserBtn.addEventListener('click', function getUserDataRenderPage() {
   axios.get('/api/users/3') //will change to users/id(id will select by DOM)
     .then(function (response) {
       // 1.handle success
-      console.log(response.data)
       if (response.data) {
         coverageImage.style.backgroundImage = `url('${response.data.coverage}')` || 'none'
         avatarImage.style.backgroundImage = `url('${response.data.avatar}')` || 'none'
@@ -118,7 +117,7 @@ formSubmit.addEventListener('click', function sendEditData(event) {
     }) //will change to users/id(id will select by DOM)
       .then(function (response) {
         // 1.handle success
-        console.log(response)
+        // console.log(response)
       })
       .catch(function (error) {
         // 2.handle error

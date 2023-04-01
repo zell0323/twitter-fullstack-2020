@@ -1,12 +1,18 @@
 const db = require('../../models')
 const { User } = db
 const { imgurFileHandler } = require('../../helpers/file-helpers')
+const helpers = require('../../_helpers')
 const userController = {
   editUserPage: async (req, res, next) => {
     try {
+      const check = helpers.getUser(req).id === Number(req.params.id) ? true : false
+      if (!check) return res.json({
+        status: 'error',
+        message: 'Permission denied!'
+      })
       // 根據傳入的id找到對應的使用者
       const user = await User.findOne({ where: { id: req.params.id } })
-      console.log(user)
+      // console.log(user)
       if (!user) throw new Error('No such User!')
       // 回傳資料
       return res.json({
@@ -23,6 +29,11 @@ const userController = {
   },
   editUser: async (req, res, next) => {
     try {
+      const check = helpers.getUser(req).id === Number(req.params.id) ? true : false
+      if (!check) return res.json({
+        status: 'error',
+        message: 'Permission denied!'
+      })
       const { name, introduction, croppedAvatar, croppedCoverage } = req.body
       if (!name) throw new Error('Name is required!')
       // console.log(name, introduction)
@@ -32,8 +43,8 @@ const userController = {
         imgurFileHandler(croppedAvatar),
         imgurFileHandler(croppedCoverage)]
       )
-      console.log(avatarFilePath)
-      console.log(coverageFilePath)
+      // console.log(avatarFilePath)
+      // console.log(coverageFilePath)
       if (!user) throw new Error('Can not find user!')
       const updatedUser = await user.update({
         name,

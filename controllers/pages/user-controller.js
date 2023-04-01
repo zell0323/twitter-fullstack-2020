@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs') //載入 bcrypt
 const db = require('../../models')
-const { getUser } = require('../../helpers/auth-helpers')
+const helpers = require('../../helpers')
 const { User } = db
 const userController = {
   registPage: (req, res) => {
@@ -29,9 +29,13 @@ const userController = {
   logInPage: (req, res) => {
     res.render('login')
   },
-  logIn: (req, res) => {
-    req.flash('success_messages', '成功登入！')
-    res.redirect('/main')
+  logIn: (req, res, next) => {
+    try {
+      req.flash('success_messages', '成功登入！')
+      res.redirect('/main')
+    } catch (err) {
+      next(err)
+    }
   },
   logout: (req, res) => {
     req.flash('success_messages', '登出成功！')
@@ -52,8 +56,8 @@ const userController = {
   // }
   settingPage: async (req, res, next) => {
     try {
-      const loginUser = getUser(req)
-      console.log(loginUser.id)
+      const loginUser = helpers.getUser(req).id
+      // console.log(loginUser.id)
       const findUser = await User.findByPk(loginUser.id, { raw: true })
       if (!findUser) throw new Error('Can not find user!')
       return res.render('setting', { findUser })
@@ -66,7 +70,7 @@ const userController = {
       const { account, name, email, password, confirmpassword } = req.body
       if (!account || !name || !email || !password || !confirmpassword) throw new Error('All column is required!')
       if (password !== confirmpassword) throw new Error('Password do not match to confirm password')
-      const loginUser = getUser(req)
+      const loginUser = helpers.getUser(req).id
       const user = await User.findByPk(loginUser.id)
       if (!user) throw new Error('Cannot find user!')
       await user.update({

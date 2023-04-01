@@ -3,6 +3,7 @@ const router = express.Router()
 const userController = require('../../controllers/apis/user-controller')
 const { apiErrorHandler } = require('../../middleware/error-handler')
 const upload = require('../../middleware/multer')
+// const { authenticated } = require('../../middleware/apiAuth')
 
 // 瀏覽編輯使用者頁面 GET /api/users/:id
 router.get('/users/:id', userController.editUserPage)
