@@ -11,8 +11,9 @@ module.exports = {
       name: `user${i + 1}`,
       role: 'regular',
       introduction:faker.lorem.text(),
-      avatar:`https://loremflickr.com/240/240/face/?random=${Math.random() * 100}`,
-      coverage: `https://loremflickr.com/320/240/restaurant,landscape/?random=${Math.random() * 100}`,
+      
+      avatar:`https://picsum.photos/240/240?random=${Math.random() * 100}`,
+      coverage: `https://picsum.photos/300/200?random=${Math.random() * 100}`,
       createdAt: new Date(),
       updatedAt: new Date()
     })))

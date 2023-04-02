@@ -37,7 +37,7 @@ const adminController = {
       .then(() => res.redirect('/admin/admin_main'))
       .catch(err => next(err))
     },
-    getMainPage: (req, res,next) => {
+  getMainPage: (req, res,next) => {
 
       
       Tweet.findAll({
@@ -46,30 +46,39 @@ const adminController = {
         include: [User]
       })
       .then(tweets => {
-        //console.log(tweets[0])
+        //console.log(tweets)
         res.render('admin/admin_main', { tweets })
       })
       .catch(err => next(err))
 
     },
-    getUsers:(req,res, next)=>{
+  getUsers:(req,res, next)=>{
      User.findAll({
-        
-        raw:true
+        where:{role:'regular'},
+        include:[
+          {model:Tweet},
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' },
+        ]
       })
       .then(users => {
-        //users=JSON.stringify(users)
-        //const tweet=Tweet.findAll({raw:true})
-        console.log({users})
-        //console.log({tweet}.tweet)
-        res.render('admin/admin_users', { users })
+        const result = users.map(user => ({
+          
+          ...user.toJSON(),
+          tweetCount: user.Tweets.length,
+          followerCount:user.Followers.length,
+          followingCount:user.Followings.length
+        }))
+        console.log( result)
+        res.render('admin/admin_users', {users:result})
       })
+      
       .catch(err => next(err))
     },
-    loginPage: (req,res)=>{
+  loginPage: (req,res)=>{
       return res.render('admin/login') 
     },
-    logIn: (req, res) => {
+  logIn: (req, res) => {
       req.flash('success_messages', '後台成功登入！')
       res.redirect('/admin/admin_main')
     }
