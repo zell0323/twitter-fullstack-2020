@@ -1,4 +1,4 @@
-const { Tweet, User ,Followship, Reply, Like} = require('../models')
+const { Tweet, User ,Followship, Like} = require('../models')
 const Handlebars=require('handlebars')
 Handlebars.registerHelper('relativeTime', function (value) {
   const date = new Date();
@@ -72,9 +72,9 @@ const adminController = {
         console.log( result)
         res.render('admin/admin_users', {users:result})
       })
-      
       .catch(err => next(err))
     },
+
   loginPage: (req,res)=>{
       return res.render('admin/login') 
     },
