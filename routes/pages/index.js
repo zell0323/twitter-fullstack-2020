@@ -1,40 +1,31 @@
 const express = require('express')
 const router = express.Router()
 const userController = require('../../controllers/pages/user-controller')
-const mainPageController = require('../../controllers/pages/mainPage-controller')
+const tweetController = require('../../controllers/pages/tweet-controller')
+const adminController = require('../../controllers/pages/admin/admin-controller')
 const { generalErrorHandler } = require('../../middleware/error-handler')
 const passport = require('../../config/passport')
-// 瀏覽貼文頁面 GET /users/:id/tweets
-router.get('/users/:id/tweets', userController.getUserTweets)
-// 顯示所有追蹤的人的資訊 GET /users/:id/followings
-// router.get('/users/:id/followings', userController.getUserFollowings)
-// // 顯示所有被追蹤的資訊 GET /users/:id/followers
-// router.get('/users/:id/followers', userController.getUserFollowers)
-// // 顯示使用者喜愛的貼文清單 GET /users/:id/likes
-// router.get('/users/:id/likes', userController.getUserLikes)
-
-//admin routes 
+const { authenticatedRegular, authenticatedAdmin } = require('../../middleware/auth')
 const admin = require('./modules/admin')
-router.use('/admin', admin)
 
-//normal users
-//regist
-router.get('/regist', userController.registPage)
-router.post('/regist', userController.regist)
-
-// login & logout
-router.get('/login', userController.logInPage)
-router.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }), userController.logIn) // 注意是 post
+router.get('/admin/signin', adminController.adminSignInPage)
+router.post('/admin/signin', passport.authenticate('admin-local', { failureRedirect: '/admin/signin', failureFlash: true }), adminController.adminSignIn)
+router.use('/admin', authenticatedAdmin, admin)
+router.get('/signup', userController.signUpPage)
+router.post('/signup', userController.signUp)
+router.get('/signin', userController.signInPage)
+router.post('/signin', passport.authenticate('user-local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
 router.get('/logout', userController.logout)
-
-// setting
-router.get('/setting', userController.settingPage)
-router.post('/setting', userController.setting)
-
-//main page
-router.get('/main', mainPageController.getMainPage)
-
-router.use('/', (req, res) => res.redirect('/main'))
+router.get('/users/:id/tweets', authenticatedRegular, userController.getUserTweets)
+router.get('/users/:id/replies', authenticatedRegular, userController.getUserReplies)
+router.get('/users/:id/likes', authenticatedRegular, userController.getUserLikes)
+router.get('/users/:id/followers', authenticatedRegular, userController.getUserFollowers)
+router.get('/users/:id/followings', authenticatedRegular, userController.getUserFollowings)
+router.get('/tweets/:id/replies', authenticatedRegular, tweetController.getTweet)
+router.get('/tweets/', authenticatedRegular, tweetController.getTweets)
+router.get('/setting', authenticatedRegular, userController.settingPage)
+router.put('/setting', authenticatedRegular, userController.setting)
 router.use('/', generalErrorHandler)
+router.use('/', (req, res) => res.redirect('/tweets'))
 
 module.exports = router
