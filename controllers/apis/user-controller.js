@@ -1,42 +1,44 @@
-const { sequelize, User, Tweet, Reply, Followship, Like, Sequelize } = require('../../models')
-const helpers = require('../../_helpers')
-const userServices = require('../../services/user-services')
+const { User, Tweet, Reply, Followship, Like } = require('../../models')
+const helpers = require('../../helpers/auth-helper')
 const dateFormatter = require('../../helpers/dateFormatter')
 const { imgurFileHandler } = require('../../helpers/file-helpers')
+
 const userController = {
-
-
-  addFollowing: async (req, res, next) => {
+  addFollowing: async (req, res) => {
     try {
+      // Block user from following himself
+      if (req.body.id.toString() === helpers.getUser(req).id.toString()) return res.status(200).json({ message: '不能追蹤自己' })
 
-      if (req.body.id.toString() === helpers.getUser(req).id.toString()) {
-        res.status(200).json({ message: '不能追蹤自己' })
-      }
-
-      else {
-        let user = await User.findByPk(req.body.id)
-        const followship = await Followship.findOne({
+      // Check if user exists and find followship
+      const [user, followship] = await Promise.all([
+        User.findByPk(req.body.id),
+        Followship.findOne({
           where: { followerId: helpers.getUser(req).id, followingId: req.body.id }
         })
-        if (!user) throw new Error("User doesn't exist!")
+      ])
 
-        if (!followship) {
-          await Followship.create({ followerId: helpers.getUser(req).id, followingId: req.body.id })
+      // Throw error if user doesn't exist
+      if (!user) throw new Error("User doesn't exist!")
+
+      // Create followship if it doesn't exist
+      if (!followship) await Followship.create({ followerId: helpers.getUser(req).id, followingId: req.body.id })
+
+      // Find user with followers
+      const foundUser = await User.findByPk(req.body.id, {
+        include: {
+          model: User,
+          as: 'Followers'
         }
-        user = await User.findByPk(req.body.id, {
-          include: {
-            model: User,
-            as: 'Followers'
-          }
-        })
+      })
 
-        const isFollowed = user.Followers.some(fr => fr.id === helpers.getUser(req).id)
-        res.status(302).json({
-          followerCount: user.Followers.length,
-          isFollowed
-        })
-      }
+      // Check if user is followed
+      const isFollowed = foundUser.Followers.some(fr => fr.id === helpers.getUser(req).id)
 
+      // Return user's follower count and isFollowed status
+      res.status(302).json({
+        followerCount: user.Followers.length,
+        isFollowed
+      })
     } catch (error) {
       console.log(error)
       res.status(500).json({
@@ -45,7 +47,7 @@ const userController = {
     }
   },
 
-  removeFollowing: async (req, res, next) => {
+  removeFollowing: async (req, res) => {
     try {
       let user = await User.findByPk(req.params.id)
       const followship = await Followship.findOne({

@@ -1,16 +1,22 @@
-const { User, Tweet, Reply, Followship, Like } = require('../../models')
+const { User, Tweet, Reply, Like } = require('../../models')
 const dateFormatter = require('../../helpers/dateFormatter')
-const helpers = require('../../_helpers')
+const helpers = require('../../helpers/auth-helper')
+
 const tweetController = {
   getTweet: async (req, res) => {
     try {
-      let tweet = await Tweet.findByPk(req.params.id, {
+      // find tweet by id
+      const TweetId = req.params.id
+      const tweet = await Tweet.findByPk(TweetId, {
         include: { model: User },
         nest: true
       })
+      if (!tweet) throw new Error("Tweet doesn't exist!")
 
-      tweet = tweet.toJSON()
-      dateFormatter(tweet, 8)
+      // modify data's createdAt property
+      dateFormatter(tweet.toJSON(), 8)
+
+      // return tweet
       res.status(200).json({
         tweet
       })
@@ -20,70 +26,71 @@ const tweetController = {
       })
     }
   },
-
   getLikeCount: async (req, res) => {
-    const tweetId = req.params.id
     try {
-      const tweet = await Tweet.findByPk(tweetId, {
-        include: {
-          model: Like,
-        }
-      })
-      const likeCount = tweet.Likes.length
+      // count likes
+      const TweetId = req.params.id
+      const likeCount = await Like.count({ where: { TweetId } })
+
+      // return likeCount
       res.status(200).json({
         likeCount
       })
     } catch (error) {
-      console.log(error)
       res.status(500).json({
         error: error.message
       })
     }
   },
-  addLike: async (req, res, next) => {
+  addLike: async (req, res) => {
     try {
+      // find tweet and like
+      const UserId = helpers.getUser(req)?.id
       const TweetId = req.params.id
-      let tweet = await Tweet.findByPk(TweetId)
-      const like = await Like.findOne({ where: { userId: helpers.getUser(req).id, TweetId } })
+      if (!UserId) throw new Error("Please login first!")
+      const [tweet, like] = await Promise.all([
+        Tweet.findByPk(TweetId),
+        Like.findOne({ where: { UserId, TweetId } })
+      ])
       if (!tweet) throw new Error("Tweet doesn't exist!")
-      if (!like) {
-        await Like.create({ UserId: helpers.getUser(req).id, TweetId })
-      }
-      tweet = await Tweet.findByPk(TweetId, {
-        include: {
-          model: Like,
-        }
-      })
-      const likeCount = tweet.Likes.length
-      const isLiked = tweet.Likes.some(like => like.UserId === helpers.getUser(req).id)
+      if (like) throw new Error("You've already liked this tweet!")
+
+      // if user hasn't liked the tweet, create a like
+      await Like.create({ UserId, TweetId })
+      const likeCount = await Like.count({ where: { TweetId } })
+
+      // return likeCount and isLiked
       res.status(302).json({
         likeCount,
-        isLiked
+        isLiked: true
       })
     } catch (error) {
-      console.log(error)
       res.status(302).json({
         error: error.message
       })
     }
   },
-  removeLike: async (req, res, next) => {
+  removeLike: async (req, res) => {
     try {
+      // find tweet and like
+      const UserId = helpers.getUser(req)?.id
       const TweetId = req.params.id
-      const like = await Like.findOne({
-        where: { UserId: helpers.getUser(req).id, TweetId }
-      })
-      if (like) await like.destroy()
-      const tweet = await Tweet.findByPk(TweetId, {
-        include: {
-          model: Like,
-        }
-      })
-      const likeCount = tweet.Likes.length
-      const isLiked = tweet.Likes.some(like => like.UserId === helpers.getUser(req).id)
+      if (!UserId) throw new Error("Please login first!")
+      const [tweet, like] = await Promise.all([
+        Tweet.findByPk(TweetId),
+        Like.findOne({ where: { UserId, TweetId } })
+      ])
+      if (!tweet) throw new Error("Tweet doesn't exist!")
+      if (!like) throw new Error("You haven't liked this tweet!")
+
+      // if user has liked the tweet, remove the like
+      await like.destroy()
+
+      // return likeCount and isLiked
+      const likeCount = await Like.count({ where: { TweetId } })
       res.status(302).json({
         likeCount,
-        isLiked
+        isLiked: false
       })
     } catch (error) {
       res.status(302).json({
@@ -92,21 +99,19 @@ const tweetController = {
     }
   },
 
-  postTweet: async (req, res, next) => {
-    const description = req.body.description
+  postTweet: async (req, res) => {
     try {
-      if (!description) throw new Error("推文不可為空白")
-      if (description.length > 140) throw new Error(" 推文長度上限為140 個字元！")
-      await Tweet.create({ UserId: helpers.getUser(req).id, description })
-      const tweet = await Tweet.findOne({
-        where: { UserId: helpers.getUser(req).id, description }
-      })
-      if (!tweet) throw new Error("推文失敗！")
+      const UserId = helpers.getUser(req)?.id
+      const description = req.body.description
+      if (!UserId) throw new Error("Please login first!")
+      if (!description) throw new Error("The tweet cannot be blank!")
+      if (description.length > 140) throw new Error("tweet length limit is 140 characters!")
+      const tweet = await Tweet.create({ UserId, description })
+      if (!tweet) throw new Error("Tweet failed!")
       res.status(302).json({
         status: "success",
-        message: "推文成功！"
+        message: "Tweet successfully!"
       })
-
     } catch (error) {
       res.status(302).json({
         status: "failure",
@@ -114,23 +119,22 @@ const tweetController = {
       })
     }
   },
-  postReply: async (req, res, next) => {
-    const comment = req.body.comment
-    const TweetId = req.params.id
-    console.log('reply!')
+  postReply: async (req, res) => {
     try {
-      if (!comment) throw new Error("回覆不可為空白")
-      if (comment.length > 140) throw new Error("回覆長度上限為 140 個字元！")
+      const UserId = helpers.getUser(req)?.id
+      const comment = req.body.comment
+      console.log(comment)
+      const TweetId = req.params.id
+      if (!UserId) throw new Error("Please login first!")
+      if (!comment) throw new Error("The reply cannot be blank!")
+      if (comment.length > 140) throw new Error("Reply length limit is 140 characters!")
       const tweet = await Tweet.findByPk(TweetId)
-      if (!tweet) throw new Error("無此推文！")
-      await Reply.create({ UserId: helpers.getUser(req).id, TweetId, comment })
-      const reply = await Reply.findOne({
-        where: { UserId: helpers.getUser(req).id, TweetId, comment }
-      })
-      if (!reply) throw new Error("回覆失敗！")
+      if (!tweet) throw new Error("Tweet doesn't exist!")
+      const reply = await Reply.create({ UserId, TweetId, comment })
+      if (!reply) throw new Error("Reply failed!")
       res.status(302).json({
         status: "success",
-        message: "回覆成功！"
+        message: "Reply successfully!"
       })
 
     } catch (error) {
@@ -140,27 +144,6 @@ const tweetController = {
       })
     }
   }
-
-
-
-  // postReply: (req, res, next) => {
-
-  // },
-
-  // addLike: (req, res, next) => {
-
-  // },
-
-  // removeLike: (req, res, next) => {
-
-  // },
-
-  // addFollowing: (req, res, next) => {
-
-  // },
-
-  // removeFollowing: (req, res, next) => {
-
-  // },
 }
+
 module.exports = tweetController

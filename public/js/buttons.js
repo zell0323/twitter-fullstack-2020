@@ -35,13 +35,13 @@ async function like(button) {
       const data = await response.json()
       console.log(data)
       likeCountElement.textContent = data.likeCount
-      if (data.isLiked) button.classList.toggle('liked') 
+      if (data.isLiked) button.classList.toggle('liked')
     } else if (button.classList.contains('liked')) {
       const response = await fetch(`/tweets/${tweetId}/unlike`, { method: 'POST' })
       const data = await response.json()
       console.log(data)
       likeCountElement.textContent = data.likeCount
-      if (data.isLiked === false) button.classList.toggle('liked') 
+      if (data.isLiked === false) button.classList.toggle('liked')
     }
 
   } catch (error) {
@@ -99,6 +99,7 @@ async function postTweet(input) {
 
 async function postReply(id, input) {
   try {
+    console.log(input.value)
     if (input.value.length > 140) throw new Error('回覆長度上限為 140 個字元！')
     if (input.value.length === 0) throw new Error('內容不可為空白！')
     const response = await fetch(`/tweets/${id}/replies`, {

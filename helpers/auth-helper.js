@@ -5,6 +5,7 @@ const getUser = req => {
 const ensureAuthenticated = req => {
   return req.isAuthenticated()
 }
+
 module.exports = {
   getUser,
   ensureAuthenticated // 新增這裡

@@ -2,10 +2,6 @@ const express = require('express')
 const router = express.Router()
 const { apiErrorHandler } = require('../../middleware/error-handler')
 const upload = require('../../middleware/multer')
-const passport = require('../../config/passport')
-// const { authenticated, authenticatedAdmin } = require('../../middleware/auth')
-const { generalErrorHandler } = require('../../middleware/error-handler') //
-
 
 const userController = require('../../controllers/apis/user-controller')
 const tweetController = require('../../controllers/apis/tweet-controller')
