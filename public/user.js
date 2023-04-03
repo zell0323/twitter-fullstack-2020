@@ -146,7 +146,7 @@ const avatarCrop = new Cropper(avatarimageCropField, {
   cropBoxResizable: true, // 是否有裁剪框調整四邊八點
   movable: true, // 是否允許移動圖片
   zoomable: true, // 是否允許縮放圖片大小
-  rotatable: false,   // 是否允許旋轉圖片
+  rotatable: true,   // 是否允許旋轉圖片
   zoomOnWheel: true, // 是否允許通過滑鼠滾輪來縮放圖片
   zoomOnTouch: true, // 是否允許通過觸控移動來縮放圖片
 })
@@ -225,7 +225,7 @@ const coverageCrop = new Cropper(coverageimageCropField, {
   cropBoxResizable: true, // 是否有裁剪框調整四邊八點
   movable: true, // 是否允許移動圖片
   zoomable: true, // 是否允許縮放圖片大小
-  rotatable: false,   // 是否允許旋轉圖片
+  rotatable: true,   // 是否允許旋轉圖片
   zoomOnWheel: true, // 是否允許通過滑鼠滾輪來縮放圖片
   zoomOnTouch: true, // 是否允許通過觸控移動來縮放圖片
 })
