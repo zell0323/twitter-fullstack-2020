@@ -56,13 +56,13 @@ const tweetController = {
       if (like) throw new Error("You've already liked this tweet!")
 
       // if user hasn't liked the tweet, create a like
-      await Like.create({ UserId, TweetId })
+      const newLike = await Like.create({ UserId, TweetId })
       const likeCount = await Like.count({ where: { TweetId } })
 
       // return likeCount and isLiked
       res.status(302).json({
         likeCount,
-        isLiked: true
+        isLiked: newLike ? true : false
       })
     } catch (error) {
       res.status(302).json({
@@ -84,13 +84,13 @@ const tweetController = {
       if (!like) throw new Error("You haven't liked this tweet!")
 
       // if user has liked the tweet, remove the like
-      await like.destroy()
+      const isDestroy = await like.destroy()
 
       // return likeCount and isLiked
       const likeCount = await Like.count({ where: { TweetId } })
       res.status(302).json({
         likeCount,
-        isLiked: false
+        isLiked: !isDestroy
       })
     } catch (error) {
       res.status(302).json({
@@ -123,7 +123,6 @@ const tweetController = {
     try {
       const UserId = helpers.getUser(req)?.id
       const comment = req.body.comment
-      console.log(comment)
       const TweetId = req.params.id
       if (!UserId) throw new Error("Please login first!")
       if (!comment) throw new Error("The reply cannot be blank!")

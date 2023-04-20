@@ -13,11 +13,13 @@ async function follow(button) {
       const data = await response.json()
       console.log(data)
       if (data.isFollowed) button.classList.toggle('followed') //remove followed
+      if (document.querySelector(".user-follower-count")) document.querySelector(".user-follower-count").innerHTML = data?.followerCount
     } else if (button.classList.contains('followed')) {
       const response = await fetch(`/followships/${button.id}`, { method: 'DELETE' })
       const data = await response.json()
       console.log(data)
       if (data.isFollowed === false) button.classList.toggle('followed') //add followed
+      if (document.querySelector(".user-follower-count")) document.querySelector(".user-follower-count").innerHTML = data?.followerCount
     }
 
   } catch (error) {

@@ -1,15 +1,13 @@
 <a href="#" class="coverage-a">
   <div class="coverage-image" style="background-image: url('{{user.coverage}}');">
   </div>
-  {{!-- <img src="https://i.imgur.com/s2FQTRY.jpg" class="coverage-image" alt="coverage"> --}}
 </a>
 <div class="d-flex px-3 align-items-center">
   <div class="avatar-size">
     <div class="avatar-image-clip">
       <div class="avatar-border">
         <a href="#" class="avatar-a">
-          <div class="avatar-image"
-            style="background-image: url('{{user.avatar}}');">
+          <div class="avatar-image" style="background-image: url('{{user.avatar}}');">
           </div>
         </a>
       </div>
@@ -21,9 +19,9 @@
   <div class="ms-auto me-3">{{>btn_msg}}</div>
   <div class="me-3">{{>btn_notfi}}</div>
   <div class="button my-auto {{#if user.isFollowed}}followed{{/if}}" onclick="follow(this)" id="{{user.id}}">
-      <button class="isFollowed">正在跟隨</button>
-      <button class="notFollowed ms-auto">跟隨</button>
-    </div>
+    <button class="isFollowed">正在跟隨</button>
+    <button class="notFollowed ms-auto">跟隨</button>
+  </div>
   {{/if}}
 </div>
 <div class="user-information ps-3">
@@ -32,11 +30,13 @@
   <div class="user-description mt-2">{{user.introduction}}</div>
   <div class="mb-2 d-flex justify-content-start align-items-center follow-box">
     <div class="followings-block d-flex justify-content-center align-items-center pe-2">
-      <a href="/users/{{user.id}}/followings" class="link-followings">{{user.followingCount}}
+      <a href="/users/{{user.id}}/followings" class="link-followings"><span
+          class="user-following-count">{{user.followingCount}}</span>
         <span class="user-followings">追隨中</span></a>
     </div>
     <div class="followers-block d-flex justify-content-center align-items-center px-2">
-      <a href="/users/{{user.id}}/followers" class="link-followers">{{user.followerCount}}
+      <a href="/users/{{user.id}}/followers" class="link-followers"><span
+          class="user-follower-count">{{user.followerCount}}</span>
         <span class="user-followers">追隨者</span></a>
     </div>
   </div>

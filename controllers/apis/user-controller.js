@@ -6,78 +6,70 @@ const { imgurFileHandler } = require('../../helpers/file-helpers')
 const userController = {
   addFollowing: async (req, res) => {
     try {
-      // Block user from following himself
-      if (req.body.id.toString() === helpers.getUser(req).id.toString()) return res.status(200).json({ message: '不能追蹤自己' })
+      const UserId = helpers.getUser(req)?.id
+      const reqUserId = req.body.id
+      if (reqUserId === Number(UserId)) throw new Error('You cannot follow yourself!')
 
       // Check if user exists and find followship
       const [user, followship] = await Promise.all([
-        User.findByPk(req.body.id),
+        User.findByPk(reqUserId),
         Followship.findOne({
-          where: { followerId: helpers.getUser(req).id, followingId: req.body.id }
+          where: { followerId: UserId, followingId: reqUserId }
         })
       ])
-
-      // Throw error if user doesn't exist
       if (!user) throw new Error("User doesn't exist!")
+      if (followship) throw new Error('You have already followed this user!')
 
       // Create followship if it doesn't exist
-      if (!followship) await Followship.create({ followerId: helpers.getUser(req).id, followingId: req.body.id })
+      const newFollowship = await Followship.create({ followerId: UserId, followingId: reqUserId })
 
-      // Find user with followers
-      const foundUser = await User.findByPk(req.body.id, {
-        include: {
-          model: User,
-          as: 'Followers'
-        }
-      })
-
-      // Check if user is followed
-      const isFollowed = foundUser.Followers.some(fr => fr.id === helpers.getUser(req).id)
+      // Get user's follower count
+      const followerCount = await Followship.count({ where: { followingId: reqUserId } })
 
       // Return user's follower count and isFollowed status
       res.status(302).json({
-        followerCount: user.Followers.length,
-        isFollowed
+        followerCount,
+        isFollowed: newFollowship ? true : false
       })
     } catch (error) {
-      console.log(error)
       res.status(500).json({
         error: error.message
       })
     }
   },
-
   removeFollowing: async (req, res) => {
     try {
-      let user = await User.findByPk(req.params.id)
-      const followship = await Followship.findOne({
-        where: { followerId: helpers.getUser(req).id, followingId: req.params.id }
-      })
+      const UserId = helpers.getUser(req)?.id
+      const reqUserId = req.params.id
+      // Check if user exists and find followship
+      const [user, followship] = await Promise.all([
+        User.findByPk(reqUserId),
+        Followship.findOne({
+          where: { followerId: UserId, followingId: reqUserId }
+        })
+      ])
       if (!user) throw new Error("User doesn't exist!")
-      if (followship) await followship.destroy()
-      user = await User.findByPk(req.params.id, {
-        include: {
-          model: User,
-          as: 'Followers'
-        }
-      })
+      if (!followship) throw new Error('You have not followed this user!')
+      const isDestroy = await followship.destroy()
 
-      const isFollowed = user.Followers.some(fr => fr.id === helpers.getUser(req).id)
+      // Get user's follower count
+      const followerCount = await Followship.count({ where: { followingId: reqUserId } })
+
       res.status(302).json({
-        followerCount: user.Followers.length,
-        isFollowed
+        followerCount,
+        isFollowed: !isDestroy
       })
     } catch (error) {
-      console.log(error)
       res.status(500).json({
         error: error.message
       })
     }
   },
-
-  getUserTweets: async (req, res, next) => {
+  // 可以改成捲動式版本
+  getUserTweets: async (req, res) => {
     try {
-      const user = await User.findByPk(req.params.id, {
+      const reqUserId = req.params.id
+      const user = await User.findByPk(reqUserId, {
         include: {
           model: Tweet,
           include: [{ model: Reply }, { model: User }, { model: Like }],
@@ -102,10 +94,11 @@ const userController = {
     }
 
   },
-
-  getUserReplies: async (req, res, next) => {
+  // 可以改成捲動式版本
+  getUserReplies: async (req, res) => {
     try {
-      const user = await User.findByPk(req.params.id, {
+      const reqUserId = req.params.id
+      const user = await User.findByPk(reqUserId, {
         include: {
           model: Reply,
           include: [
@@ -128,13 +121,12 @@ const userController = {
       res.status(500).json({
         error: error.message
       })
-
     }
   },
-
-  getUserLikes: async (req, res, next) => {
+  getUserLikes: async (req, res) => {
     try {
-      let user = await User.findByPk(req.params.id, {
+      const reqUserId = req.params.id
+      let user = await User.findByPk(reqUserId, {
         include: [
           {
             model: Like, include:
@@ -236,7 +228,6 @@ const userController = {
       })
       // 根據傳入的id找到對應的使用者
       const user = await User.findOne({ where: { id: req.params.id } })
-      // console.log(user)
       if (!user) throw new Error('No such User!')
       // 回傳資料
       return res.json({
@@ -260,15 +251,11 @@ const userController = {
       })
       const { name, introduction, croppedAvatar, croppedCoverage } = req.body
       if (!name) throw new Error('Name is required!')
-      // console.log(name, introduction)
-      // Upload image to imgur
       const [user, avatarFilePath, coverageFilePath] = await Promise.all([
         User.findByPk(req.params.id),
         imgurFileHandler(croppedAvatar),
         imgurFileHandler(croppedCoverage)]
       )
-      // console.log(avatarFilePath)
-      // console.log(coverageFilePath)
       if (!user) throw new Error('Can not find user!')
       const updatedUser = await user.update({
         name,
